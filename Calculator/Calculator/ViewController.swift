@@ -25,6 +25,10 @@ class ViewController: UIViewController {
     
     
     @IBAction func doOperation(_ sender: UIButton) {
+        //If the previous output was an error then clear the screen for new operations
+        if outputLabel.text!.elementsEqual("Error") {
+            reset()
+        }
         //If the key pressed is not to clear the contents then proceed with the rest of the validations
         if sender.tag != 17 {
             // If the button pressed is only a number then append the inputs to the label
@@ -37,6 +41,10 @@ class ViewController: UIViewController {
                     previousValue = outputLabel.text!
                 }
             } else if sender.tag == 13 || sender.tag == 14 || sender.tag == 15 || sender.tag == 16{
+                //If the operator key is pressed twice or more back to back do nothing
+                if checkForDuplicateOperatorKey() {
+                    return
+                }
                 operationKey = sender.tag
                 //Check if any operator is chosen again with more than 2 values then perform operation and proceed
                 if isOperatorAlreadyPressed {
@@ -53,9 +61,18 @@ class ViewController: UIViewController {
                     isOperatorAlreadyPressed = true
                 }
                 // If the = button is pressed then perform the arithmetic operation on both the values
-            } else if sender.tag == 12 {
+            } else if sender.tag == 12 && !outputLabel.text!.isEmpty{
+                if checkForDuplicateOperatorKey() {
+                    outputLabel.text = previousValue
+                    return
+                }
                 //While performing operation ignore the operators while converting the value from string to Int
                 currentValue = outputLabel.text!.replacingOccurrences(of: "*", with: "").replacingOccurrences(of: "+", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: "/", with: "")
+                //If divisible by 0 show error message
+                if Int(currentValue) == 0 && operationKey == 16{
+                    outputLabel.text = "Error"
+                    return
+                }
                 outputLabel.text = performOperation(Int(currentValue)!, Int(previousValue)!, operationKey)
                 previousOperationKey = 0
                 isOperatorAlreadyPressed = false
@@ -63,6 +80,18 @@ class ViewController: UIViewController {
             //If the button pressed is AC then clear the contents of the output label text and reset all the values to it's initial state
         } else {
             reset()
+        }
+    }
+    
+    @IBAction func backspaceAction(_ sender: UIButton) {
+        var result = outputLabel.text!
+        if !result.isEmpty {
+            if result.count > 1 {
+                result.remove(at: result.index(before: result.endIndex))
+            } else {
+                result = ""
+            }
+            outputLabel.text! = result
         }
     }
     
@@ -90,6 +119,13 @@ class ViewController: UIViewController {
         return String(operationValue)
     }
     
+    func checkForDuplicateOperatorKey() -> Bool {
+        if outputLabel.text!.elementsEqual("*") || outputLabel.text!.elementsEqual("+") || outputLabel.text!.elementsEqual("/") || outputLabel.text!.elementsEqual("-") {
+            return true
+        }
+        return false
+    }
+    
     func getOperatorString(_ operationKey:Int) -> String{
         var operatorStr = ""
         switch operationKey {
@@ -101,6 +137,10 @@ class ViewController: UIViewController {
             operatorStr = ""
         }
         return operatorStr
+    }
+    
+    func addToHistory() {
+        
     }
     
     func reset() {
