@@ -33,7 +33,10 @@ class ViewController: UIViewController {
         if sender.tag != 17 {
             // If the button pressed is only a number then append the inputs to the label
             if sender.tag < 12 {
-                if !previousValue.isEmpty {
+                //Functionality for '.' (Dots)
+                if sender.tag == 11 {
+                    outputLabel.text! += "."
+                } else if !previousValue.isEmpty {
                     outputLabel.text = outputLabel.text! + String(sender.tag - 1)
                 }
                 else {
@@ -61,7 +64,7 @@ class ViewController: UIViewController {
                     isOperatorAlreadyPressed = true
                 }
                 // If the = button is pressed then perform the arithmetic operation on both the values
-            } else if sender.tag == 12 && !outputLabel.text!.isEmpty{
+            } else if sender.tag == 12 && (!outputLabel.text!.isEmpty && !outputLabel.text!.elementsEqual("0")){
                 if checkForDuplicateOperatorKey() {
                     outputLabel.text = previousValue
                     return
@@ -88,10 +91,10 @@ class ViewController: UIViewController {
         if !result.isEmpty {
             if result.count > 1 {
                 result.remove(at: result.index(before: result.endIndex))
+                outputLabel.text! = result
             } else {
-                result = ""
+                reset()
             }
-            outputLabel.text! = result
         }
     }
     
