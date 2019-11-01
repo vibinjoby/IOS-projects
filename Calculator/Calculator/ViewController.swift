@@ -8,6 +8,14 @@
 
 import UIKit
 
+//TO-DO : 0. not working
+// check the output label while performing arithmetic operation using .
+extension String {
+    var isInteger: Bool { return Int(self) != nil }
+    var isFloat: Bool { return Float(self) != nil }
+    var isDouble: Bool { return Double(self) != nil }
+}
+
 class ViewController: UIViewController {
     @IBOutlet weak var operationLbl: UILabel!
     @IBOutlet weak var outputLabel: UILabel!
@@ -35,24 +43,47 @@ class ViewController: UIViewController {
             if sender.tag < 12 {
                 //Functionality for '.' (Dots)
                 if sender.tag == 11 {
-                    outputLabel.text! += "."
+                    //Prevent the '.' being used more than once
+                    if !outputLabel.text!.contains(".") {
+                        outputLabel.text! += "."
+                    }
+                    //If the previous value is not empty then append the values to the outputlabel
                 } else if !previousValue.isEmpty {
-                    outputLabel.text = outputLabel.text! + String(sender.tag - 1)
-                }
+                    outputLabel.text! += String(sender.tag - 1)
+                } //Else the previous value is initialised to the current number input from the calculator app
                 else {
                     outputLabel.text = String(sender.tag - 1)
                     previousValue = outputLabel.text!
                 }
+                //Append the dots to the operation label
+                if sender.tag == 11 {
+                    operationLbl.text! += "."
+                    //Append the inputs into the operation label dynamically
+                } else {
+                    if !outputLabel.text!.contains(".") {
+                        operationLbl.text! += String(sender.tag - 1)
+                    }
+                    
+                }
+                
+                // Check if the key pressed is any operator key from 13...16
             } else if sender.tag == 13 || sender.tag == 14 || sender.tag == 15 || sender.tag == 16{
+                //If the output label ends with '.' and any mathematical operator is pressed append it with 0
+                if outputLabel.text!.hasSuffix(".") {
+                    outputLabel.text! += "0"
+                }
                 //If the operator key is pressed twice or more back to back do nothing
                 if checkForDuplicateOperatorKey() {
                     return
                 }
+                
+                //Get the operation key tag number
                 operationKey = sender.tag
+                
                 //Check if any operator is chosen again with more than 2 values then perform operation and proceed
                 if isOperatorAlreadyPressed {
                     outputLabel.text! = outputLabel.text!.replacingOccurrences(of: "*", with: "").replacingOccurrences(of: "+", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: "/", with: "")
-                    previousValue = performOperation(Int(outputLabel.text!)!, Int(previousValue)!, previousOperationKey)
+                    previousValue = performOperation(outputLabel.text!, previousValue, previousOperationKey)
                     outputLabel.text = getOperatorString(operationKey)
                     operationLbl.text = previousValue
                     previousOperationKey = sender.tag
@@ -63,20 +94,33 @@ class ViewController: UIViewController {
                     previousOperationKey = sender.tag
                     isOperatorAlreadyPressed = true
                 }
+                
+                //Append the operator input into the operation label dynamically
+                operationLbl.text! += getOperatorString(sender.tag)
+                
                 // If the = button is pressed then perform the arithmetic operation on both the values
             } else if sender.tag == 12 && (!outputLabel.text!.isEmpty && !outputLabel.text!.elementsEqual("0")){
+                //If the output label ends with '.' and any mathematical operator is pressed append it with 0
+                if outputLabel.text!.hasSuffix(".") {
+                    outputLabel.text! += "0"
+                }
+                //Refrain the users from entering more than one operator at a time while calculating the output
                 if checkForDuplicateOperatorKey() {
                     outputLabel.text = previousValue
+                    return
+                }
+                //If the previous value is empty then do not perform any operation
+                if previousValue.isEmpty {
                     return
                 }
                 //While performing operation ignore the operators while converting the value from string to Int
                 currentValue = outputLabel.text!.replacingOccurrences(of: "*", with: "").replacingOccurrences(of: "+", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: "/", with: "")
                 //If divisible by 0 show error message
-                if Int(currentValue) == 0 && operationKey == 16{
+                if Int(currentValue) == 0 && operationKey == 16 {
                     outputLabel.text = "Error"
                     return
                 }
-                outputLabel.text = performOperation(Int(currentValue)!, Int(previousValue)!, operationKey)
+                outputLabel.text = performOperation(currentValue, previousValue, operationKey)
                 previousOperationKey = 0
                 isOperatorAlreadyPressed = false
             }
@@ -99,28 +143,35 @@ class ViewController: UIViewController {
     }
     
     
-    func performOperation(_ currentVal:Int,_ previousVal:Int,_ operationKey:Int) -> String{
-        var operationValue = 0
+    func performOperation(_ currentVal:String,_ previousVal:String,_ operationKey:Int) -> String{
+        
+        var finalOutput = ""
+        var operationValueDouble = 0.0
+        
         //Addition
         if operationKey == 13 {
-            operationValue = currentVal + previousVal
-            operationLbl.text = "\(currentVal) + \(previousVal)"
-            //Subtraction
+            operationValueDouble = Double(currentVal)! + Double(previousVal)!
+            operationLbl.text = "\(Double(currentVal)!) + \(Double(previousVal)!)"
+        //Subtraction
         } else if operationKey == 14 {
-            operationValue = previousVal - currentVal
-            operationLbl.text = "\(previousVal) - \(currentVal)"
-            //Multiplication
+            operationValueDouble = Double(previousVal)! - Double(currentVal)!
+            operationLbl.text = "\(Double(previousVal)!) - \(Double(currentVal)!)"
+        //Multiplication
         } else if operationKey == 15 {
-            operationValue = currentVal * previousVal
-            operationLbl.text = "\(previousVal) * \(currentVal)"
-            //Division
+            operationValueDouble = Double(currentVal)! * Double(previousVal)!
+            operationLbl.text = "\(Double(currentVal)!) * \(Double(previousVal)!)"
+        //Division
         } else if operationKey == 16 {
-            operationValue = previousVal / currentVal
-            operationLbl.text = "\(previousVal) / \(currentVal)"
+            operationValueDouble = Double(previousVal)! / Double(currentVal)!
+            operationLbl.text = "\(Double(previousVal)!) / \(Double(currentVal)!)"
         }
+ 
+        //If the final output is XX.0 then remove the .0 from the final output
+        finalOutput = String(format: "%g", operationValueDouble)
         
-        return String(operationValue)
+        return finalOutput
     }
+    
     
     func checkForDuplicateOperatorKey() -> Bool {
         if outputLabel.text!.elementsEqual("*") || outputLabel.text!.elementsEqual("+") || outputLabel.text!.elementsEqual("/") || outputLabel.text!.elementsEqual("-") {
@@ -129,7 +180,7 @@ class ViewController: UIViewController {
         return false
     }
     
-    func getOperatorString(_ operationKey:Int) -> String{
+    func getOperatorString(_ operationKey:Int) -> String {
         var operatorStr = ""
         switch operationKey {
         case 13: operatorStr = "+"
@@ -154,7 +205,5 @@ class ViewController: UIViewController {
         isOperatorAlreadyPressed = false
         previousOperationKey = 0
     }
-    
-    
 }
 

@@ -28,7 +28,9 @@
  * THE SOFTWARE.
  */
 
+import QuartzCore
 import UIKit
+
 
 class ViewController: UIViewController {
   
@@ -38,6 +40,7 @@ class ViewController: UIViewController {
   var currentValue:Int = 0
   var targetValue:Int = 0
   var score = 0
+  var round = 0
   
   
   override func viewDidLoad() {
@@ -51,6 +54,20 @@ class ViewController: UIViewController {
     } while targetValue >  100
     
     valueLbl.text = String(targetValue)
+    
+    let thumbImageNormal = UIImage(named: "SliderThumb-Normal")!
+    slider.setThumbImage(thumbImageNormal, for: .normal)
+    let thumbImageHighlighted = UIImage(named: "SliderThumb-Highlighted")!
+    slider.setThumbImage(thumbImageHighlighted, for: .highlighted)
+    let insets = UIEdgeInsets(top: 0, left: 14, bottom: 0, right: 14)
+    let trackLeftImage = UIImage(named: "SliderTrackLeft")!
+    let trackLeftResizable =
+      trackLeftImage.resizableImage(withCapInsets: insets)
+    slider.setMinimumTrackImage(trackLeftResizable, for: .normal)
+    let trackRightImage = UIImage(named: "SliderTrackRight")!
+    let trackRightResizable =
+      trackRightImage.resizableImage(withCapInsets: insets)
+    slider.setMaximumTrackImage(trackRightResizable, for: .normal)
     
     // Do any additional setup after loading the view, typically from a nib.
   }
@@ -86,9 +103,12 @@ class ViewController: UIViewController {
   @IBAction func onStartOver() {
     slider.value = 75
     self.viewDidLoad()
+    let transition = CATransition()
+    transition.type = kCATransitionFade
+    transition.duration = 1
+    transition.timingFunction = CAMediaTimingFunction(name:kCAMediaTimingFunctionEaseOut)
+    view.layer.add(transition, forKey: nil)
+    
   }
-  
-  
-  
 }
 
