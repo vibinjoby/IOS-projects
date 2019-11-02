@@ -8,13 +8,9 @@
 
 import UIKit
 
-//TO-DO : 0. not working
-// check the output label while performing arithmetic operation using .
-extension String {
-    var isInteger: Bool { return Int(self) != nil }
-    var isFloat: Bool { return Float(self) != nil }
-    var isDouble: Bool { return Double(self) != nil }
-}
+//TO-DO :code breaks
+// 8*2.5 -->
+// 8.5 * 2 = not 16 but 17
 
 class ViewController: UIViewController {
     @IBOutlet weak var operationLbl: UILabel!
@@ -46,24 +42,28 @@ class ViewController: UIViewController {
                     //Prevent the '.' being used more than once
                     if !outputLabel.text!.contains(".") {
                         outputLabel.text! += "."
+                        previousValue = outputLabel.text!
+                    } else {
+                        return
                     }
-                    //If the previous value is not empty then append the values to the outputlabel
+                //If the previous value is not empty then append the values to the outputlabel
                 } else if !previousValue.isEmpty {
                     outputLabel.text! += String(sender.tag - 1)
-                } //Else the previous value is initialised to the current number input from the calculator app
-                else {
+                //Else the previous value is initialised to the current number input from the calculator app
+                } else {
                     outputLabel.text = String(sender.tag - 1)
                     previousValue = outputLabel.text!
                 }
                 //Append the dots to the operation label
                 if sender.tag == 11 {
+                    //When the operation label is initially empty and dot is pressed append zero at the front
+                    if operationLbl.text!.isEmpty {
+                        operationLbl.text! += "0"
+                    }
                     operationLbl.text! += "."
                     //Append the inputs into the operation label dynamically
                 } else {
-                    if !outputLabel.text!.contains(".") {
-                        operationLbl.text! += String(sender.tag - 1)
-                    }
-                    
+                    operationLbl.text! += String(sender.tag - 1)
                 }
                 
                 // Check if the key pressed is any operator key from 13...16
@@ -88,10 +88,8 @@ class ViewController: UIViewController {
                     operationLbl.text = previousValue
                     previousOperationKey = sender.tag
                 } else {
-                    previousValue = outputLabel.text!
                     //Based on the sender tag of the operation key append the operator onto the output label
                     outputLabel.text = getOperatorString(operationKey)
-                    previousOperationKey = sender.tag
                     isOperatorAlreadyPressed = true
                 }
                 
@@ -121,7 +119,10 @@ class ViewController: UIViewController {
                     return
                 }
                 outputLabel.text = performOperation(currentValue, previousValue, operationKey)
+                //After the equals is pressed reset the current and previous value to zero
+                previousValue = ""
                 previousOperationKey = 0
+                operationLbl.text! = ""
                 isOperatorAlreadyPressed = false
             }
             //If the button pressed is AC then clear the contents of the output label text and reset all the values to it's initial state
@@ -130,13 +131,17 @@ class ViewController: UIViewController {
         }
     }
     
+    //Action to perform on click of back space/ delete button
     @IBAction func backspaceAction(_ sender: UIButton) {
         var result = outputLabel.text!
         if !result.isEmpty {
             if result.count > 1 {
+                //Remove the last index on click of the button
                 result.remove(at: result.index(before: result.endIndex))
                 outputLabel.text! = result
+                operationLbl.text!.remove(at: operationLbl.text!.index(before: operationLbl.text!.endIndex))
             } else {
+                //If the string is empty then reset the values to 0
                 reset()
             }
         }
@@ -151,21 +156,21 @@ class ViewController: UIViewController {
         //Addition
         if operationKey == 13 {
             operationValueDouble = Double(currentVal)! + Double(previousVal)!
-            operationLbl.text = "\(Double(currentVal)!) + \(Double(previousVal)!)"
-        //Subtraction
+            operationLbl.text = "\(String(format: "%g", Double(previousVal)!)) + \(String(format: "%g", Double(currentVal)!))"
+            //Subtraction
         } else if operationKey == 14 {
             operationValueDouble = Double(previousVal)! - Double(currentVal)!
-            operationLbl.text = "\(Double(previousVal)!) - \(Double(currentVal)!)"
-        //Multiplication
+            operationLbl.text = "\(String(format: "%g", Double(previousVal)!)) + \(String(format: "%g", Double(currentVal)!))"
+            //Multiplication
         } else if operationKey == 15 {
             operationValueDouble = Double(currentVal)! * Double(previousVal)!
-            operationLbl.text = "\(Double(currentVal)!) * \(Double(previousVal)!)"
-        //Division
+            operationLbl.text = "\(String(format: "%g", Double(previousVal)!)) + \(String(format: "%g", Double(currentVal)!))"
+            //Division
         } else if operationKey == 16 {
             operationValueDouble = Double(previousVal)! / Double(currentVal)!
-            operationLbl.text = "\(Double(previousVal)!) / \(Double(currentVal)!)"
+            operationLbl.text = "\(String(format: "%g", Double(previousVal)!)) + \(String(format: "%g", Double(currentVal)!))"
         }
- 
+        
         //If the final output is XX.0 then remove the .0 from the final output
         finalOutput = String(format: "%g", operationValueDouble)
         
