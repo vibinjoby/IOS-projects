@@ -10,7 +10,7 @@ import UIKit
 
 //TO-DO :
 // show history functionality
-// +- operation
+// +- operation for the second number incorrectly working
 
 class ViewController: UIViewController {
     @IBOutlet weak var operationLbl: UILabel!
@@ -37,19 +37,6 @@ class ViewController: UIViewController {
         }
         //If the key pressed is not to clear the contents then proceed with the rest of the validations
         if sender.tag != 17 {
-            //+- operation functionality
-            if sender.tag == 18 && !outputLabel.text!.elementsEqual("0"){
-                if !outputLabel.text!.hasPrefix("-")  {
-                    outputLabel.text! = "-\(outputLabel.text!)"
-                    operationLbl.text! = "-\(operationLbl.text!)"
-                } else if outputLabel.text!.hasPrefix("*") || outputLabel.text!.hasPrefix("/"){
-                    outputLabel.text!.insert("-", at: outputLabel.text!.index(outputLabel.text!.startIndex, offsetBy: 2))
-                    operationLbl.text!.insert("-", at: operationLbl.text!.index(operationLbl.text!.startIndex, offsetBy: 2))
-                } else {
-                    outputLabel.text!.remove(at: outputLabel.text!.startIndex)
-                    operationLbl.text!.remove(at: operationLbl.text!.startIndex)
-                }
-            }
             // If the button pressed is only a number then append the inputs to the label
             if sender.tag < 12 {
                 //Functionality for '.' (Dots)
@@ -80,9 +67,48 @@ class ViewController: UIViewController {
                 } else {
                     operationLbl.text! += String(sender.tag - 1)
                 }
-            } else if sender.tag == 18 {
-                if outputLabel.text!.isEmpty {
-                    
+            } //+- operation functionality
+            else if sender.tag == 18 && !outputLabel.text!.elementsEqual("0"){
+                
+                let decimalCharacters = CharacterSet.decimalDigits
+                let decimalRange = outputLabel.text!.rangeOfCharacter(from: decimalCharacters)
+                
+                
+                //Insert - only when the output label doesn't have a - sign already added
+                if outputLabel.text!.hasPrefix("*") || outputLabel.text!.hasPrefix("/"){
+                   //Check if there is a decimal number in the string
+                    if decimalRange != nil {
+                        //If the + sign exists then change it to - sign
+                        if outputLabel.text!.firstIndex(of: "+") != nil {
+                            outputLabel.text! = outputLabel.text!.replacingOccurrences(of: "+", with: "-")
+                            operationLbl.text! = operationLbl.text!.replacingOccurrences(of: "+", with: "-")
+                        //If the - sign exists then change it to + sign
+                        } else if outputLabel.text!.firstIndex(of: "-") != nil {
+                            outputLabel.text! = outputLabel.text!.replacingOccurrences(of: "-", with: "+")
+                            operationLbl.text! = operationLbl.text!.replacingOccurrences(of: "-", with: "+")
+                        //If no sign exists then change it to - sign
+                        } else if outputLabel.text!.firstIndex(of: "-") == nil {
+                            outputLabel.text!.insert("-", at: outputLabel.text!.index(outputLabel.text!.startIndex, offsetBy: 1))
+                            operationLbl.text!.insert("-", at: operationLbl.text!.index(operationLbl.text!.startIndex, offsetBy: 1))
+                        }
+                    }
+                //If the number has a prefix of - sign then change it to + sign with the operation key
+                } else if outputLabel.text!.hasPrefix("-")  {
+                    //Change from - to +
+                    operationKey = 13
+                    outputLabel.text! = outputLabel.text!.replacingOccurrences(of: "-", with: "+")
+                    operationLbl.text! = operationLbl.text!.replacingOccurrences(of: "-", with: "+")
+                //If the number has a prefix of + sign then change it to - sign with the operation key
+                } else {
+                    //Change from + to -
+                    operationKey = 14
+                    if outputLabel.text!.hasPrefix("+") {
+                        outputLabel.text! = outputLabel.text!.replacingOccurrences(of: "+", with: "-")
+                        operationLbl.text! = operationLbl.text!.replacingOccurrences(of: "+", with: "-")
+                    } else {
+                        outputLabel.text! = "-\(outputLabel.text!)"
+                        operationLbl.text! = "-\(operationLbl.text!)"
+                    }
                 }
                 // Check if the key pressed is any operator key from 13...16
             } else if sender.tag == 13 || sender.tag == 14 || sender.tag == 15 || sender.tag == 16{
@@ -134,7 +160,7 @@ class ViewController: UIViewController {
                     return
                 }
                 //While performing operation ignore the operators while converting the value from string to Int
-                currentValue = outputLabel.text!.replacingOccurrences(of: "*", with: "").replacingOccurrences(of: "+", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: "/", with: "")
+                currentValue = outputLabel.text!.replacingOccurrences(of: "*", with: "").replacingOccurrences(of: "/", with: "")
                 //If divisible by 0 show error message
                 if Int(currentValue) == 0 && operationKey == 16 {
                     outputLabel.text = "Error"
@@ -161,7 +187,8 @@ class ViewController: UIViewController {
     @IBAction func backspaceAction(_ sender: UIButton) {
         var result = outputLabel.text!
         if !result.isEmpty {
-            if result.count > 1 {
+            //If the result is not an error then proceed with the backspace functionality
+            if result.count > 1 && !result.elementsEqual("Error"){
                 //Remove the last index on click of the button
                 result.remove(at: result.index(before: result.endIndex))
                 outputLabel.text! = result
