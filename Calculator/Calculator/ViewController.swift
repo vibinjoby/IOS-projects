@@ -8,9 +8,9 @@
 
 import UIKit
 
-//TO-DO :code breaks
-// 8*2.5 -->
-// 8.5 * 2 = not 16 but 17
+//TO-DO :
+// show history functionality
+// +- operation
 
 class ViewController: UIViewController {
     @IBOutlet weak var operationLbl: UILabel!
@@ -20,6 +20,8 @@ class ViewController: UIViewController {
     var operationKey = 0
     var previousOperationKey = 0
     var isOperatorAlreadyPressed = false
+    var historyArr:[String] = []
+    var calculationHistory = ""
     
     override func viewDidLoad() {
         outputLabel.text = "0"
@@ -35,6 +37,19 @@ class ViewController: UIViewController {
         }
         //If the key pressed is not to clear the contents then proceed with the rest of the validations
         if sender.tag != 17 {
+            //+- operation functionality
+            if sender.tag == 18 && !outputLabel.text!.elementsEqual("0"){
+                if !outputLabel.text!.hasPrefix("-")  {
+                    outputLabel.text! = "-\(outputLabel.text!)"
+                    operationLbl.text! = "-\(operationLbl.text!)"
+                } else if outputLabel.text!.hasPrefix("*") || outputLabel.text!.hasPrefix("/"){
+                    outputLabel.text!.insert("-", at: outputLabel.text!.index(outputLabel.text!.startIndex, offsetBy: 2))
+                    operationLbl.text!.insert("-", at: operationLbl.text!.index(operationLbl.text!.startIndex, offsetBy: 2))
+                } else {
+                    outputLabel.text!.remove(at: outputLabel.text!.startIndex)
+                    operationLbl.text!.remove(at: operationLbl.text!.startIndex)
+                }
+            }
             // If the button pressed is only a number then append the inputs to the label
             if sender.tag < 12 {
                 //Functionality for '.' (Dots)
@@ -42,14 +57,14 @@ class ViewController: UIViewController {
                     //Prevent the '.' being used more than once
                     if !outputLabel.text!.contains(".") {
                         outputLabel.text! += "."
-                        previousValue = outputLabel.text!
                     } else {
                         return
                     }
-                //If the previous value is not empty then append the values to the outputlabel
+                    //If the previous value is not empty then append the values to the outputlabel
                 } else if !previousValue.isEmpty {
                     outputLabel.text! += String(sender.tag - 1)
-                //Else the previous value is initialised to the current number input from the calculator app
+                    
+                    //Else the previous value is initialised to the current number input from the calculator app
                 } else {
                     outputLabel.text = String(sender.tag - 1)
                     previousValue = outputLabel.text!
@@ -65,7 +80,10 @@ class ViewController: UIViewController {
                 } else {
                     operationLbl.text! += String(sender.tag - 1)
                 }
-                
+            } else if sender.tag == 18 {
+                if outputLabel.text!.isEmpty {
+                    
+                }
                 // Check if the key pressed is any operator key from 13...16
             } else if sender.tag == 13 || sender.tag == 14 || sender.tag == 15 || sender.tag == 16{
                 //If the output label ends with '.' and any mathematical operator is pressed append it with 0
@@ -82,14 +100,18 @@ class ViewController: UIViewController {
                 
                 //Check if any operator is chosen again with more than 2 values then perform operation and proceed
                 if isOperatorAlreadyPressed {
-                    outputLabel.text! = outputLabel.text!.replacingOccurrences(of: "*", with: "").replacingOccurrences(of: "+", with: "").replacingOccurrences(of: "-", with: "").replacingOccurrences(of: "/", with: "")
+                    outputLabel.text!.remove(at: outputLabel.text!.startIndex)
                     previousValue = performOperation(outputLabel.text!, previousValue, previousOperationKey)
                     outputLabel.text = getOperatorString(operationKey)
                     operationLbl.text = previousValue
                     previousOperationKey = sender.tag
                 } else {
+                    //Append the output label to the previous value on click of operator sign
+                    previousValue = outputLabel.text!
                     //Based on the sender tag of the operation key append the operator onto the output label
                     outputLabel.text = getOperatorString(operationKey)
+                    //get the previous operation key loaded for the next operation
+                    previousOperationKey = sender.tag
                     isOperatorAlreadyPressed = true
                 }
                 
@@ -119,11 +141,15 @@ class ViewController: UIViewController {
                     return
                 }
                 outputLabel.text = performOperation(currentValue, previousValue, operationKey)
-                //After the equals is pressed reset the current and previous value to zero
-                previousValue = ""
+                //After the equals is pressed reset the current value to zero and the previous value to the last output
+                previousValue = outputLabel.text!
+                currentValue = ""
                 previousOperationKey = 0
-                operationLbl.text! = ""
+                operationKey = 0
+                operationLbl.text! = outputLabel.text!
                 isOperatorAlreadyPressed = false
+            } else {
+                reset()
             }
             //If the button pressed is AC then clear the contents of the output label text and reset all the values to it's initial state
         } else {
@@ -160,15 +186,15 @@ class ViewController: UIViewController {
             //Subtraction
         } else if operationKey == 14 {
             operationValueDouble = Double(previousVal)! - Double(currentVal)!
-            operationLbl.text = "\(String(format: "%g", Double(previousVal)!)) + \(String(format: "%g", Double(currentVal)!))"
+            operationLbl.text = "\(String(format: "%g", Double(previousVal)!)) - \(String(format: "%g", Double(currentVal)!))"
             //Multiplication
         } else if operationKey == 15 {
             operationValueDouble = Double(currentVal)! * Double(previousVal)!
-            operationLbl.text = "\(String(format: "%g", Double(previousVal)!)) + \(String(format: "%g", Double(currentVal)!))"
+            operationLbl.text = "\(String(format: "%g", Double(previousVal)!)) * \(String(format: "%g", Double(currentVal)!))"
             //Division
         } else if operationKey == 16 {
             operationValueDouble = Double(previousVal)! / Double(currentVal)!
-            operationLbl.text = "\(String(format: "%g", Double(previousVal)!)) + \(String(format: "%g", Double(currentVal)!))"
+            operationLbl.text = "\(String(format: "%g", Double(previousVal)!)) / \(String(format: "%g", Double(currentVal)!))"
         }
         
         //If the final output is XX.0 then remove the .0 from the final output
