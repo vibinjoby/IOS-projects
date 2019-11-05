@@ -9,8 +9,9 @@
 import UIKit
 
 //TO-DO :
-// show history functionality
-// +- operation for the second number incorrectly working
+// update plus minus in history functionality
+//dont show operator symbol in the output label
+// % modulus operator functionality
 
 class ViewController: UIViewController {
     @IBOutlet weak var operationLbl: UILabel!
@@ -20,7 +21,7 @@ class ViewController: UIViewController {
     var operationKey = 0
     var previousOperationKey = 0
     var isOperatorAlreadyPressed = false
-    var historyArr:[String] = []
+    static var historyArr:[String] = []
     var calculationHistory = ""
     
     override func viewDidLoad() {
@@ -67,8 +68,14 @@ class ViewController: UIViewController {
                 } else {
                     operationLbl.text! += String(sender.tag - 1)
                 }
+                //Adding the output label to the calculation history
+                if sender.tag != 11 {
+                    calculationHistory += String(sender.tag - 1)
+                } else {
+                    calculationHistory += "."
+                }
             } //+- operation functionality
-            else if sender.tag == 18 && !outputLabel.text!.elementsEqual("0"){
+            else if sender.tag == 18 && !outputLabel.text!.elementsEqual("0") {
                 
                 let decimalCharacters = CharacterSet.decimalDigits
                 let decimalRange = outputLabel.text!.rangeOfCharacter(from: decimalCharacters)
@@ -76,29 +83,29 @@ class ViewController: UIViewController {
                 
                 //Insert - only when the output label doesn't have a - sign already added
                 if outputLabel.text!.hasPrefix("*") || outputLabel.text!.hasPrefix("/"){
-                   //Check if there is a decimal number in the string
+                    //Check if there is a decimal number in the string
                     if decimalRange != nil {
                         //If the + sign exists then change it to - sign
                         if outputLabel.text!.firstIndex(of: "+") != nil {
                             outputLabel.text! = outputLabel.text!.replacingOccurrences(of: "+", with: "-")
                             operationLbl.text! = operationLbl.text!.replacingOccurrences(of: "+", with: "-")
-                        //If the - sign exists then change it to + sign
+                            //If the - sign exists then change it to + sign
                         } else if outputLabel.text!.firstIndex(of: "-") != nil {
-                            outputLabel.text! = outputLabel.text!.replacingOccurrences(of: "-", with: "+")
-                            operationLbl.text! = operationLbl.text!.replacingOccurrences(of: "-", with: "+")
-                        //If no sign exists then change it to - sign
+                            outputLabel.text! = outputLabel.text!.replacingOccurrences(of: "-", with: "")
+                            operationLbl.text! = operationLbl.text!.replacingOccurrences(of: "-", with: "")
+                            //If no sign exists then change it to - sign
                         } else if outputLabel.text!.firstIndex(of: "-") == nil {
                             outputLabel.text!.insert("-", at: outputLabel.text!.index(outputLabel.text!.startIndex, offsetBy: 1))
-                            operationLbl.text!.insert("-", at: operationLbl.text!.index(operationLbl.text!.startIndex, offsetBy: 1))
+                            operationLbl.text!.insert("-", at: operationLbl.text!.index(operationLbl.text!.lastIndex(of: "*")!, offsetBy: 1))
                         }
                     }
-                //If the number has a prefix of - sign then change it to + sign with the operation key
+                    //If the number has a prefix of - sign then change it to + sign with the operation key
                 } else if outputLabel.text!.hasPrefix("-")  {
                     //Change from - to +
                     operationKey = 13
-                    outputLabel.text! = outputLabel.text!.replacingOccurrences(of: "-", with: "+")
-                    operationLbl.text! = operationLbl.text!.replacingOccurrences(of: "-", with: "+")
-                //If the number has a prefix of + sign then change it to - sign with the operation key
+                    outputLabel.text! = outputLabel.text!.replacingOccurrences(of: "-", with: "")
+                    operationLbl.text! = operationLbl.text!.replacingOccurrences(of: "-", with: "")
+                    //If the number has a prefix of + sign then change it to - sign with the operation key
                 } else {
                     //Change from + to -
                     operationKey = 14
@@ -110,6 +117,7 @@ class ViewController: UIViewController {
                         operationLbl.text! = "-\(operationLbl.text!)"
                     }
                 }
+                
                 // Check if the key pressed is any operator key from 13...16
             } else if sender.tag == 13 || sender.tag == 14 || sender.tag == 15 || sender.tag == 16{
                 //If the output label ends with '.' and any mathematical operator is pressed append it with 0
@@ -126,7 +134,8 @@ class ViewController: UIViewController {
                 
                 //Check if any operator is chosen again with more than 2 values then perform operation and proceed
                 if isOperatorAlreadyPressed {
-                    outputLabel.text!.remove(at: outputLabel.text!.startIndex)
+                    //replacing the operator key to make sure the passed value to perform operation is a number
+                    outputLabel.text! = outputLabel.text!.replacingOccurrences(of: "*", with: "").replacingOccurrences(of: "/", with: "")
                     previousValue = performOperation(outputLabel.text!, previousValue, previousOperationKey)
                     outputLabel.text = getOperatorString(operationKey)
                     operationLbl.text = previousValue
@@ -143,6 +152,9 @@ class ViewController: UIViewController {
                 
                 //Append the operator input into the operation label dynamically
                 operationLbl.text! += getOperatorString(sender.tag)
+                
+                //Adding the output label to the calculation history
+                calculationHistory += outputLabel.text!
                 
                 // If the = button is pressed then perform the arithmetic operation on both the values
             } else if sender.tag == 12 && (!outputLabel.text!.isEmpty && !outputLabel.text!.elementsEqual("0")){
@@ -167,6 +179,10 @@ class ViewController: UIViewController {
                     return
                 }
                 outputLabel.text = performOperation(currentValue, previousValue, operationKey)
+                
+                //Add the output to the history
+                addToHistory()
+                
                 //After the equals is pressed reset the current value to zero and the previous value to the last output
                 previousValue = outputLabel.text!
                 currentValue = ""
@@ -193,6 +209,10 @@ class ViewController: UIViewController {
                 result.remove(at: result.index(before: result.endIndex))
                 outputLabel.text! = result
                 operationLbl.text!.remove(at: operationLbl.text!.index(before: operationLbl.text!.endIndex))
+                //Remove the last character from the history if the string is not empty
+                if !calculationHistory.isEmpty {
+                    calculationHistory.removeLast()
+                }
             } else {
                 //If the string is empty then reset the values to 0
                 reset()
@@ -206,19 +226,15 @@ class ViewController: UIViewController {
         var finalOutput = ""
         var operationValueDouble = 0.0
         
-        //Addition
-        if operationKey == 13 {
+        //Addition or Subtraction
+        if operationKey == 13 || operationKey == 14{
             operationValueDouble = Double(currentVal)! + Double(previousVal)!
             operationLbl.text = "\(String(format: "%g", Double(previousVal)!)) + \(String(format: "%g", Double(currentVal)!))"
-            //Subtraction
-        } else if operationKey == 14 {
-            operationValueDouble = Double(previousVal)! - Double(currentVal)!
-            operationLbl.text = "\(String(format: "%g", Double(previousVal)!)) - \(String(format: "%g", Double(currentVal)!))"
-            //Multiplication
+        //Multiplication
         } else if operationKey == 15 {
             operationValueDouble = Double(currentVal)! * Double(previousVal)!
             operationLbl.text = "\(String(format: "%g", Double(previousVal)!)) * \(String(format: "%g", Double(currentVal)!))"
-            //Division
+        //Division
         } else if operationKey == 16 {
             operationValueDouble = Double(previousVal)! / Double(currentVal)!
             operationLbl.text = "\(String(format: "%g", Double(previousVal)!)) / \(String(format: "%g", Double(currentVal)!))"
@@ -251,8 +267,12 @@ class ViewController: UIViewController {
         return operatorStr
     }
     
+    //Adding the output label to the calculation history
     func addToHistory() {
-        
+        calculationHistory += " = \(outputLabel.text!)"
+        ViewController.historyArr.append(calculationHistory)
+        calculationHistory = outputLabel.text!
+        print(ViewController.historyArr)
     }
     
     func reset() {
@@ -262,6 +282,7 @@ class ViewController: UIViewController {
         previousValue = ""
         isOperatorAlreadyPressed = false
         previousOperationKey = 0
+        calculationHistory = ""
     }
 }
 

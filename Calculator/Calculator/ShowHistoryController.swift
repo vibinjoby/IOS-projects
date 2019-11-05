@@ -8,19 +8,28 @@
 
 import UIKit
 
-class ShowHistoryController: UIViewController {
-    @IBOutlet weak var operationLbl: UILabel!
-    @IBOutlet weak var outputLbl: UILabel!
+class ShowHistoryController: UIViewController, UITableViewDelegate,  UITableViewDataSource {
+    
+    @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let vc = ViewController()
-        if vc.operationLbl != nil {
-            operationLbl.text = vc.operationLbl.text!
+        tableView.dataSource = self
+        tableView.delegate = self
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return ViewController.historyArr.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "historyCell", for: indexPath)
+        let label = cell.viewWithTag(1) as! UILabel
+        for index in 0..<ViewController.historyArr.count {
+            if indexPath.row == index {
+                label.text = ViewController.historyArr[index]
+            }
         }
-        if vc.outputLabel != nil {
-            outputLbl.text = vc.outputLabel.text
-        }
+        return cell
     }
     
     @IBAction func close() {
