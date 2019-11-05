@@ -100,6 +100,9 @@ class ViewController: UIViewController {
         if tagNumber == 11 {
             //Prevent the '.' being used more than once
             if !outputLabel.text!.contains(Constants.dot.rawValue) {
+                if outputLabel.text!.elementsEqual("0"){
+                    previousValue = "0."
+                }
                 outputLabel.text! += Constants.dot.rawValue
             } else {
                 return
@@ -255,7 +258,7 @@ class ViewController: UIViewController {
         isOperatorAlreadyPressed = false
     }
     
-    
+    //Method to perform the final operation action
     func performOperation(_ currentVal:String,_ previousVal:String,_ operationKey:Int) -> String{
         var finalOutput = ""
         var operationValueDouble = 0.0
@@ -280,7 +283,7 @@ class ViewController: UIViewController {
         return finalOutput
     }
     
-    
+    //Method to check if there is a second operator key in the output label
     func checkForDuplicateOperatorKey() -> Bool {
         if outputLabel.text!.elementsEqual(Constants.multiply.rawValue) || outputLabel.text!.elementsEqual(Constants.plus.rawValue) || outputLabel.text!.elementsEqual(Constants.divide.rawValue) || outputLabel.text!.elementsEqual(Constants.minus.rawValue) {
             return true
@@ -288,6 +291,7 @@ class ViewController: UIViewController {
         return false
     }
     
+    //Method to get the operator string
     func getOperatorString(_ operationKey:Int) -> String {
         var operatorStr = ""
         switch operationKey {
@@ -301,6 +305,7 @@ class ViewController: UIViewController {
         return operatorStr
     }
     
+    //Method to perform modulo operation on the input
     func performModuloOperation() {
         //Check if the user entered only a number
         if !outputLabel.text!.elementsEqual(Constants.zero.rawValue) {
@@ -331,6 +336,7 @@ class ViewController: UIViewController {
         print(ViewController.historyArr)
     }
     
+    //Reset all the variables to its initial state
     func reset() {
         outputLabel.text = Constants.zero.rawValue
         operationLbl.text = ""
