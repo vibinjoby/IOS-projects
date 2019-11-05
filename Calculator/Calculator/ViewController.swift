@@ -11,7 +11,6 @@ import UIKit
 //TO-DO :
 // update plus minus in history functionality
 //dont show operator symbol in the output label
-// % modulus operator functionality
 
 class ViewController: UIViewController {
     @IBOutlet weak var operationLbl: UILabel!
@@ -30,10 +29,20 @@ class ViewController: UIViewController {
         super.viewDidLoad()
     }
     
+    enum Constants:String {
+        case plus = "+"
+        case minus = "-"
+        case multiply = "*"
+        case divide = "/"
+        case dot = "."
+        case error = "Error"
+        case zero = "0"
+    }
+    
     
     @IBAction func doOperation(_ sender: UIButton) {
         //If the previous output was an error then clear the screen for new operations
-        if outputLabel.text!.elementsEqual("Error") {
+        if outputLabel.text!.elementsEqual(Constants.error.rawValue) {
             reset()
         }
         //If the key pressed is not to clear the contents then proceed with the rest of the validations
@@ -43,8 +52,8 @@ class ViewController: UIViewController {
                 //Functionality for '.' (Dots)
                 if sender.tag == 11 {
                     //Prevent the '.' being used more than once
-                    if !outputLabel.text!.contains(".") {
-                        outputLabel.text! += "."
+                    if !outputLabel.text!.contains(Constants.dot.rawValue) {
+                        outputLabel.text! += Constants.dot.rawValue
                     } else {
                         return
                     }
@@ -61,9 +70,9 @@ class ViewController: UIViewController {
                 if sender.tag == 11 {
                     //When the operation label is initially empty and dot is pressed append zero at the front
                     if operationLbl.text!.isEmpty {
-                        operationLbl.text! += "0"
+                        operationLbl.text! += Constants.zero.rawValue
                     }
-                    operationLbl.text! += "."
+                    operationLbl.text! += Constants.dot.rawValue
                     //Append the inputs into the operation label dynamically
                 } else {
                     operationLbl.text! += String(sender.tag - 1)
@@ -72,57 +81,61 @@ class ViewController: UIViewController {
                 if sender.tag != 11 {
                     calculationHistory += String(sender.tag - 1)
                 } else {
-                    calculationHistory += "."
+                    calculationHistory += Constants.dot.rawValue
                 }
             } //+- operation functionality
-            else if sender.tag == 18 && !outputLabel.text!.elementsEqual("0") {
+            else if sender.tag == 18 && !outputLabel.text!.elementsEqual(Constants.zero.rawValue) {
                 
                 let decimalCharacters = CharacterSet.decimalDigits
                 let decimalRange = outputLabel.text!.rangeOfCharacter(from: decimalCharacters)
                 
                 
                 //Insert - only when the output label doesn't have a - sign already added
-                if outputLabel.text!.hasPrefix("*") || outputLabel.text!.hasPrefix("/"){
+                if outputLabel.text!.hasPrefix(Constants.multiply.rawValue) || outputLabel.text!.hasPrefix(Constants.divide.rawValue){
                     //Check if there is a decimal number in the string
                     if decimalRange != nil {
                         //If the + sign exists then change it to - sign
-                        if outputLabel.text!.firstIndex(of: "+") != nil {
-                            outputLabel.text! = outputLabel.text!.replacingOccurrences(of: "+", with: "-")
-                            operationLbl.text! = operationLbl.text!.replacingOccurrences(of: "+", with: "-")
+                        if outputLabel.text!.firstIndex(of: Character(Constants.plus.rawValue)) != nil {
+                            outputLabel.text! = outputLabel.text!.replacingOccurrences(of: Constants.plus.rawValue, with: Constants.minus.rawValue)
+                            operationLbl.text! = operationLbl.text!.replacingOccurrences(of: Constants.plus.rawValue, with: Constants.minus.rawValue)
                             //If the - sign exists then change it to + sign
-                        } else if outputLabel.text!.firstIndex(of: "-") != nil {
-                            outputLabel.text! = outputLabel.text!.replacingOccurrences(of: "-", with: "")
-                            operationLbl.text! = operationLbl.text!.replacingOccurrences(of: "-", with: "")
+                        } else if outputLabel.text!.firstIndex(of: Character(Constants.minus.rawValue)) != nil {
+                            outputLabel.text! = outputLabel.text!.replacingOccurrences(of: Constants.minus.rawValue, with: "")
+                            operationLbl.text! = operationLbl.text!.replacingOccurrences(of: Constants.minus.rawValue, with: "")
                             //If no sign exists then change it to - sign
-                        } else if outputLabel.text!.firstIndex(of: "-") == nil {
-                            outputLabel.text!.insert("-", at: outputLabel.text!.index(outputLabel.text!.startIndex, offsetBy: 1))
-                            operationLbl.text!.insert("-", at: operationLbl.text!.index(operationLbl.text!.lastIndex(of: "*")!, offsetBy: 1))
+                        } else if outputLabel.text!.firstIndex(of: Character(Constants.minus.rawValue)) == nil {
+                            outputLabel.text!.insert(Character(Constants.minus.rawValue), at: outputLabel.text!.index(outputLabel.text!.startIndex, offsetBy: 1))
+                            operationLbl.text!.insert(Character(Constants.minus.rawValue), at: operationLbl.text!.index(operationLbl.text!.lastIndex(of:  Character(Constants.multiply.rawValue) )!, offsetBy: 1))
                         }
                     }
                     //If the number has a prefix of - sign then change it to + sign with the operation key
-                } else if outputLabel.text!.hasPrefix("-")  {
+                } else if outputLabel.text!.hasPrefix(Constants.minus.rawValue)  {
                     //Change from - to +
                     operationKey = 13
-                    outputLabel.text! = outputLabel.text!.replacingOccurrences(of: "-", with: "")
-                    operationLbl.text! = operationLbl.text!.replacingOccurrences(of: "-", with: "")
+                    outputLabel.text! = outputLabel.text!.replacingOccurrences(of: Constants.minus.rawValue, with: "")
+                    operationLbl.text! = operationLbl.text!.replacingOccurrences(of: Constants.minus.rawValue, with: "")
                     //If the number has a prefix of + sign then change it to - sign with the operation key
                 } else {
                     //Change from + to -
                     operationKey = 14
-                    if outputLabel.text!.hasPrefix("+") {
-                        outputLabel.text! = outputLabel.text!.replacingOccurrences(of: "+", with: "-")
-                        operationLbl.text! = operationLbl.text!.replacingOccurrences(of: "+", with: "-")
+                    if outputLabel.text!.hasPrefix(Constants.plus.rawValue) {
+                        outputLabel.text! = outputLabel.text!.replacingOccurrences(of: Constants.plus.rawValue, with: Constants.minus.rawValue)
+                        operationLbl.text! = operationLbl.text!.replacingOccurrences(of: Constants.plus.rawValue, with: Constants.minus.rawValue)
                     } else {
                         outputLabel.text! = "-\(outputLabel.text!)"
                         operationLbl.text! = "-\(operationLbl.text!)"
                     }
                 }
+                // Modulo functionality
+            } else if sender.tag == 19 {
+                performModuloOperation()
                 
                 // Check if the key pressed is any operator key from 13...16
-            } else if sender.tag == 13 || sender.tag == 14 || sender.tag == 15 || sender.tag == 16{
+                // Do not let the operator key be pressed at the initial before a number is entered
+            } else if (sender.tag == 13 || sender.tag == 14 || sender.tag == 15 || sender.tag == 16) && !outputLabel.text!.elementsEqual(Constants.zero.rawValue){
                 //If the output label ends with '.' and any mathematical operator is pressed append it with 0
-                if outputLabel.text!.hasSuffix(".") {
-                    outputLabel.text! += "0"
+                if outputLabel.text!.hasSuffix(Constants.dot.rawValue) {
+                    outputLabel.text! += Constants.zero.rawValue
                 }
                 //If the operator key is pressed twice or more back to back do nothing
                 if checkForDuplicateOperatorKey() {
@@ -135,7 +148,7 @@ class ViewController: UIViewController {
                 //Check if any operator is chosen again with more than 2 values then perform operation and proceed
                 if isOperatorAlreadyPressed {
                     //replacing the operator key to make sure the passed value to perform operation is a number
-                    outputLabel.text! = outputLabel.text!.replacingOccurrences(of: "*", with: "").replacingOccurrences(of: "/", with: "")
+                    outputLabel.text! = outputLabel.text!.replacingOccurrences(of: Constants.multiply.rawValue, with: "").replacingOccurrences(of: Constants.divide.rawValue, with: "")
                     previousValue = performOperation(outputLabel.text!, previousValue, previousOperationKey)
                     outputLabel.text = getOperatorString(operationKey)
                     operationLbl.text = previousValue
@@ -157,10 +170,10 @@ class ViewController: UIViewController {
                 calculationHistory += outputLabel.text!
                 
                 // If the = button is pressed then perform the arithmetic operation on both the values
-            } else if sender.tag == 12 && (!outputLabel.text!.isEmpty && !outputLabel.text!.elementsEqual("0")){
+            } else if sender.tag == 12 && (!outputLabel.text!.isEmpty && !outputLabel.text!.elementsEqual(Constants.zero.rawValue)){
                 //If the output label ends with '.' and any mathematical operator is pressed append it with 0
-                if outputLabel.text!.hasSuffix(".") {
-                    outputLabel.text! += "0"
+                if outputLabel.text!.hasSuffix(Constants.dot.rawValue) {
+                    outputLabel.text! += Constants.zero.rawValue
                 }
                 //Refrain the users from entering more than one operator at a time while calculating the output
                 if checkForDuplicateOperatorKey() {
@@ -172,10 +185,10 @@ class ViewController: UIViewController {
                     return
                 }
                 //While performing operation ignore the operators while converting the value from string to Int
-                currentValue = outputLabel.text!.replacingOccurrences(of: "*", with: "").replacingOccurrences(of: "/", with: "")
+                currentValue = outputLabel.text!.replacingOccurrences(of: Constants.multiply.rawValue, with: "").replacingOccurrences(of: Constants.divide.rawValue, with: "")
                 //If divisible by 0 show error message
                 if Int(currentValue) == 0 && operationKey == 16 {
-                    outputLabel.text = "Error"
+                    outputLabel.text = Constants.error.rawValue
                     return
                 }
                 outputLabel.text = performOperation(currentValue, previousValue, operationKey)
@@ -204,7 +217,7 @@ class ViewController: UIViewController {
         var result = outputLabel.text!
         if !result.isEmpty {
             //If the result is not an error then proceed with the backspace functionality
-            if result.count > 1 && !result.elementsEqual("Error"){
+            if result.count > 1 && !result.elementsEqual(Constants.error.rawValue){
                 //Remove the last index on click of the button
                 result.remove(at: result.index(before: result.endIndex))
                 outputLabel.text! = result
@@ -230,11 +243,11 @@ class ViewController: UIViewController {
         if operationKey == 13 || operationKey == 14{
             operationValueDouble = Double(currentVal)! + Double(previousVal)!
             operationLbl.text = "\(String(format: "%g", Double(previousVal)!)) + \(String(format: "%g", Double(currentVal)!))"
-        //Multiplication
+            //Multiplication
         } else if operationKey == 15 {
             operationValueDouble = Double(currentVal)! * Double(previousVal)!
             operationLbl.text = "\(String(format: "%g", Double(previousVal)!)) * \(String(format: "%g", Double(currentVal)!))"
-        //Division
+            //Division
         } else if operationKey == 16 {
             operationValueDouble = Double(previousVal)! / Double(currentVal)!
             operationLbl.text = "\(String(format: "%g", Double(previousVal)!)) / \(String(format: "%g", Double(currentVal)!))"
@@ -248,7 +261,7 @@ class ViewController: UIViewController {
     
     
     func checkForDuplicateOperatorKey() -> Bool {
-        if outputLabel.text!.elementsEqual("*") || outputLabel.text!.elementsEqual("+") || outputLabel.text!.elementsEqual("/") || outputLabel.text!.elementsEqual("-") {
+        if outputLabel.text!.elementsEqual(Constants.multiply.rawValue) || outputLabel.text!.elementsEqual(Constants.plus.rawValue) || outputLabel.text!.elementsEqual(Constants.divide.rawValue) || outputLabel.text!.elementsEqual(Constants.minus.rawValue) {
             return true
         }
         return false
@@ -257,14 +270,31 @@ class ViewController: UIViewController {
     func getOperatorString(_ operationKey:Int) -> String {
         var operatorStr = ""
         switch operationKey {
-        case 13: operatorStr = "+"
-        case 14: operatorStr = "-"
-        case 15: operatorStr = "*"
-        case 16: operatorStr = "/"
+        case 13: operatorStr = Constants.plus.rawValue
+        case 14: operatorStr = Constants.minus.rawValue
+        case 15: operatorStr = Constants.multiply.rawValue
+        case 16: operatorStr = Constants.divide.rawValue
         default:
             operatorStr = ""
         }
         return operatorStr
+    }
+    
+    func performModuloOperation() {
+        //Check if the user entered only a number
+        if Double(outputLabel.text!) != nil || Int(outputLabel.text!) != nil{
+            //update the operation label
+            operationLbl.text! = "\(outputLabel.text!) % = "
+            //Convert the string to double and divide it by 100 and update it in the output label
+            outputLabel.text! = String( Double(outputLabel.text!)! / 100)
+            operationLbl.text! += outputLabel.text!
+            //update the calculation history
+            calculationHistory = operationLbl.text!
+            ViewController.historyArr.append(calculationHistory)
+        } else {
+            //  If the input is not a number then update the output label as error
+            outputLabel.text! = Constants.error.rawValue
+        }
     }
     
     //Adding the output label to the calculation history
@@ -276,7 +306,7 @@ class ViewController: UIViewController {
     }
     
     func reset() {
-        outputLabel.text = "0"
+        outputLabel.text = Constants.zero.rawValue
         operationLbl.text = ""
         currentValue = ""
         previousValue = ""

@@ -97,7 +97,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5UP-1a-301">
-                                <rect key="frame" x="82" y="788" width="63" height="60"/>
+                                <rect key="frame" x="44" y="788" width="63" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <state key="normal" title="0"/>
@@ -218,6 +218,14 @@
                                     <action selector="doOperation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3FP-Zb-Eo0"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" tag="19" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ugu-Zj-xIl">
+                                <rect key="frame" x="148" y="803" width="36" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" backgroundImage="percent" catalog="system"/>
+                                <connections>
+                                    <action selector="doOperation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gxm-SS-kiP"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -234,7 +242,6 @@
         <!--Show History Controller-->
         <scene sceneID="zJc-oh-Ja8">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="5jg-Yl-frh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController id="pjE-H6-B2N" customClass="ShowHistoryController" customModule="Calculator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Z9g-KL-VHl">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
@@ -284,6 +291,7 @@
                         <outlet property="tableView" destination="Afn-nB-YCX" id="GMq-q3-k6B"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5jg-Yl-frh" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="842.02898550724649" y="116.51785714285714"/>
         </scene>
@@ -292,6 +300,7 @@
         <image name="arrowshape.turn.up.left" catalog="system" width="64" height="52"/>
         <image name="arrowshape.turn.up.right" catalog="system" width="64" height="52"/>
         <image name="divide" catalog="system" width="64" height="50"/>
+        <image name="percent" catalog="system" width="64" height="58"/>
         <image name="plusminus" catalog="system" width="58" height="64"/>
     </resources>
 </document>
