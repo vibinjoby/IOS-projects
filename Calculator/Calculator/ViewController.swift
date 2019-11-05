@@ -10,7 +10,8 @@ import UIKit
 
 //TO-DO :
 // update plus minus in history functionality
-//dont show operator symbol in the output label
+// dont show operator symbol in the output label
+// bUg fix for equals operator when there is no operation input
 
 class ViewController: UIViewController {
     @IBOutlet weak var operationLbl: UILabel!
@@ -302,18 +303,23 @@ class ViewController: UIViewController {
     
     func performModuloOperation() {
         //Check if the user entered only a number
-        if Double(outputLabel.text!) != nil || Int(outputLabel.text!) != nil{
-            //update the operation label
-            operationLbl.text! = "\(outputLabel.text!) % = "
-            //Convert the string to double and divide it by 100 and update it in the output label
-            outputLabel.text! = String( Double(outputLabel.text!)! / 100)
-            operationLbl.text! += outputLabel.text!
-            //update the calculation history
-            calculationHistory = operationLbl.text!
-            ViewController.historyArr.append(calculationHistory)
-        } else {
-            //  If the input is not a number then update the output label as error
-            outputLabel.text! = Constants.error.rawValue
+        if !outputLabel.text!.elementsEqual(Constants.zero.rawValue) {
+            if Double(outputLabel.text!) != nil || Int(outputLabel.text!) != nil{
+                //update the operation label
+                operationLbl.text! = "\(outputLabel.text!) % = "
+                //Convert the string to double and divide it by 100 and update it in the output label
+                outputLabel.text! = String( Double(outputLabel.text!)! / 100)
+                operationLbl.text! += outputLabel.text!
+                //update the calculation history
+                calculationHistory = operationLbl.text!
+                ViewController.historyArr.append(calculationHistory)
+                //Reset the value of operation label and the calculation history to the last output
+                operationLbl.text! = outputLabel.text!
+                calculationHistory = outputLabel.text!
+            } else {
+                //  If the input is not a number then update the output label as error
+                outputLabel.text! = Constants.error.rawValue
+            }
         }
     }
     
