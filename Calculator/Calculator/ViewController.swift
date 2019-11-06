@@ -9,9 +9,7 @@
 import UIKit
 
 //TO-DO :
-// update plus minus in history functionality
 // dont show operator symbol in the output label
-// bUg fix for equals operator when there is no operation input
 
 class ViewController: UIViewController {
     @IBOutlet weak var operationLbl: UILabel!
@@ -43,7 +41,8 @@ class ViewController: UIViewController {
     
     @IBAction func doOperation(_ sender: UIButton) {
         //If the previous output was an error then clear the screen for new operations
-        if outputLabel.text!.elementsEqual(Constants.error.rawValue) {
+        // Fix for infinity and nan when this appears on screen clear the output
+        if outputLabel.text!.elementsEqual(Constants.error.rawValue) ||  outputLabel.text!.elementsEqual("inf") ||  outputLabel.text!.elementsEqual("Nan"){
             reset()
         }
         //If the key pressed is not to clear the contents then proceed with the rest of the validations
@@ -100,6 +99,7 @@ class ViewController: UIViewController {
         if tagNumber == 11 {
             //Prevent the '.' being used more than once
             if !outputLabel.text!.contains(Constants.dot.rawValue) {
+                //Snippet to handle if the . is pressed first before 0 and hence to append the value to the previous value variable
                 if outputLabel.text!.elementsEqual("0"){
                     previousValue = "0."
                 }
@@ -181,6 +181,8 @@ class ViewController: UIViewController {
                 operationLbl.text! = "-\(operationLbl.text!)"
             }
         }
+        //Update the exact operations happening in operation label to the history variable
+        calculationHistory = operationLbl.text!
     }
     
     //This method performs action on click of any arithmetic operator [+,-,*,/]
@@ -224,6 +226,11 @@ class ViewController: UIViewController {
     
     // This method performs action on click of = button
     func equalsButtonFunctionality() {
+        // If there is no operation key pressed and equals is pressed before that then display the value present in the output label
+        if operationKey == 0 {
+            outputLabel.text! = outputLabel.text!
+            return
+        }
         //If the output label ends with '.' and any mathematical operator is pressed append it with 0
         if outputLabel.text!.hasSuffix(Constants.dot.rawValue) {
             outputLabel.text! += Constants.zero.rawValue
