@@ -7,11 +7,12 @@
 //
 
 import UIKit
-
 //TO-DO :
 // dont show operator symbol in the output label
+// while starting with 0 and pressing operator does'nt work
+// 89 plus minus then minus 3 again plus minus output is correct but operation label is wrong
 
-class ViewController: UIViewController {
+class ViewController: UIViewController,ShowHistoryControllerDelegate {
     @IBOutlet weak var operationLbl: UILabel!
     @IBOutlet weak var outputLabel: UILabel!
     var previousValue:String = ""
@@ -19,7 +20,7 @@ class ViewController: UIViewController {
     var operationKey = 0
     var previousOperationKey = 0
     var isOperatorAlreadyPressed = false
-    static var historyArr:[String] = []
+    var historyArr:[String] = []
     var calculationHistory = ""
     
     override func viewDidLoad() {
@@ -42,7 +43,7 @@ class ViewController: UIViewController {
     @IBAction func doOperation(_ sender: UIButton) {
         //If the previous output was an error then clear the screen for new operations
         // Fix for infinity and nan when this appears on screen clear the output
-        if outputLabel.text!.elementsEqual(Constants.error.rawValue) ||  outputLabel.text!.elementsEqual("inf") ||  outputLabel.text!.elementsEqual("Nan"){
+        if outputLabel.text!.elementsEqual(Constants.error.rawValue) ||  outputLabel.text!.elementsEqual("inf") ||  outputLabel.text!.elementsEqual("nan"){
             reset()
         }
         //If the key pressed is not to clear the contents then proceed with the rest of the validations
@@ -141,7 +142,7 @@ class ViewController: UIViewController {
         let decimalRange = outputLabel.text!.rangeOfCharacter(from: decimalCharacters)
         
         //Insert - only when the output label doesn't have a - sign already added
-        if outputLabel.text!.hasPrefix(Constants.multiply.rawValue) || outputLabel.text!.hasPrefix(Constants.divide.rawValue){
+        if outputLabel.text!.contains(Constants.multiply.rawValue) || outputLabel.text!.contains(Constants.divide.rawValue){
             //Check if there is a decimal number in the string
             if decimalRange != nil {
                 //If the + sign exists then change it to - sign
@@ -164,25 +165,56 @@ class ViewController: UIViewController {
                 }
             }
             //If the number has a prefix of - sign then change it to + sign with the operation key
-        } else if outputLabel.text!.hasPrefix(Constants.minus.rawValue)  {
+        } else if outputLabel.text!.contains(Constants.minus.rawValue)  {
             //Change from - to +
             operationKey = 13
             outputLabel.text! = outputLabel.text!.replacingOccurrences(of: Constants.minus.rawValue, with: "")
-            operationLbl.text! = operationLbl.text!.replacingOccurrences(of: Constants.minus.rawValue, with: "")
+           
+            //Bug fix for plus minus in the second variable
+            if operationLbl.text!.contains("-") {
+                let startCount = operationLbl.text!.lastIndex(of: "-")
+                operationLbl.text! = operationLbl.text!.replacingOccurrences(of: "-", with: "+", range: startCount!..<operationLbl.text!.endIndex)
+            }
+            
+            
             //If the number has a prefix of + sign then change it to - sign with the operation key
         } else {
             //Change from + to -
             operationKey = 14
-            if outputLabel.text!.hasPrefix(Constants.plus.rawValue) {
+            //If the outputLabel does not contains a minus sign then change it to minus
+            if !outputLabel.text!.contains(Constants.minus.rawValue) {
                 outputLabel.text! = outputLabel.text!.replacingOccurrences(of: Constants.plus.rawValue, with: Constants.minus.rawValue)
-                operationLbl.text! = operationLbl.text!.replacingOccurrences(of: Constants.plus.rawValue, with: Constants.minus.rawValue)
-            } else {
+                //Bug fix for numbers which doesn't have plus at the start
+                //hence appending minus at the front
+                if !outputLabel.text!.contains(Constants.minus.rawValue) {
+                    outputLabel.text! = "-\(outputLabel.text!)"
+                }
+                
+                //Bug fix for plus minus in the second variable
+                if operationLbl.text!.contains("+") {
+                    let startCount = operationLbl.text!.lastIndex(of: "+")
+                    operationLbl.text! = operationLbl.text!.replacingOccurrences(of: "+", with: "-", range: startCount!..<operationLbl.text!.endIndex)
+                } else {
+                    operationLbl.text! = "-\(operationLbl.text!)"
+                }
+                
+                // If the output label doesnt have any sign at the front its considered as a plus and hence changed to minus when plus minus button is clicked
+            } else if !outputLabel.text!.hasPrefix(Constants.plus.rawValue) {
                 outputLabel.text! = "-\(outputLabel.text!)"
                 operationLbl.text! = "-\(operationLbl.text!)"
             }
         }
         //Update the exact operations happening in operation label to the history variable
         calculationHistory = operationLbl.text!
+        //If the first character contains a plus remove it in the operation label
+        if operationLbl.text!.hasPrefix(Constants.plus.rawValue){
+            //Then remove the first character
+            operationLbl.text!.removeFirst()
+        }        //If the first character contains a plus remove it in the history
+        if calculationHistory.hasPrefix(Constants.plus.rawValue){
+            //Then remove the first character
+            calculationHistory.removeFirst()
+        }
     }
     
     //This method performs action on click of any arithmetic operator [+,-,*,/]
@@ -324,7 +356,7 @@ class ViewController: UIViewController {
                 operationLbl.text! += outputLabel.text!
                 //update the calculation history
                 calculationHistory = operationLbl.text!
-                ViewController.historyArr.append(calculationHistory)
+                historyArr.append(calculationHistory)
                 //Reset the value of operation label and the calculation history to the last output
                 operationLbl.text! = outputLabel.text!
                 calculationHistory = outputLabel.text!
@@ -338,9 +370,9 @@ class ViewController: UIViewController {
     //Adding the output label to the calculation history
     func addToHistory() {
         calculationHistory += " = \(outputLabel.text!)"
-        ViewController.historyArr.append(calculationHistory)
+        historyArr.append(calculationHistory)
         calculationHistory = outputLabel.text!
-        print(ViewController.historyArr)
+        print(historyArr)
     }
     
     //Reset all the variables to its initial state
@@ -352,6 +384,19 @@ class ViewController: UIViewController {
         isOperatorAlreadyPressed = false
         previousOperationKey = 0
         calculationHistory = ""
+    }
+    
+    //Send the history data to the history controller
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "history" {
+            let controller = segue.destination as! ShowHistoryController
+            controller.delegate = self
+            controller.historyDataArr = historyArr
+        }
+    }
+    //Clear the data of the array on click of clear button in the history page
+    func clear() {
+        historyArr = []
     }
 }
 

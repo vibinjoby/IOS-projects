@@ -8,31 +8,44 @@
 
 import UIKit
 
-class ShowHistoryController: UIViewController, UITableViewDelegate,  UITableViewDataSource {
+protocol ShowHistoryControllerDelegate {
+    func clear()
+}
+
+class ShowHistoryController: UITableViewController {
+    var historyDataArr = [String]()
+    var delegate: ShowHistoryControllerDelegate!
     
-    @IBOutlet weak var tableView: UITableView!
+    func sendHistoryData(_ historyArr: [String]) {
+        historyDataArr = historyArr
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.dataSource = self
-        tableView.delegate = self
     }
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ViewController.historyArr.count
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return historyDataArr.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "historyCell", for: indexPath)
         let label = cell.viewWithTag(1) as! UILabel
-        for index in 0..<ViewController.historyArr.count {
+        for index in 0..<historyDataArr.count {
             if indexPath.row == index {
-                label.text = ViewController.historyArr[index]
+                label.text = historyDataArr[index]
             }
         }
         return cell
     }
     
     @IBAction func close() {
-      dismiss(animated: true, completion: nil)
-    }    
+        navigationController?.popViewController(animated: true)
+    }
+    //Action method for clear button
+    //Clear the history array data
+    @IBAction func clear() {
+        delegate.clear()
+        historyDataArr = []
+        tableView.reloadData()
+    }
 }
