@@ -134,7 +134,7 @@
                                 </constraints>
                                 <state key="normal" backgroundImage="arrow.right.arrow.left" catalog="system"/>
                                 <connections>
-                                    <action selector="invertCurrency:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cVE-h4-jst"/>
+                                    <action selector="invertCurrency" destination="BYZ-38-t0r" eventType="touchUpInside" id="9jZ-Hn-ASA"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nic-LE-ShJ">

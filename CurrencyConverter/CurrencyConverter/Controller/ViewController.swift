@@ -8,7 +8,6 @@
 
 import UIKit
 //TO-DO:
-// text box validations when allow only numbers and dots which is always less than 2
 
 class ViewController: UIViewController, CurrencyDelegate, UITextFieldDelegate {
     
@@ -23,6 +22,8 @@ class ViewController: UIViewController, CurrencyDelegate, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        baseTextBox.delegate = self
+        targetTextBox.delegate = self
         baseCurrency = "CAD"
         targetCurrency = "INR"
     }
@@ -31,7 +32,7 @@ class ViewController: UIViewController, CurrencyDelegate, UITextFieldDelegate {
      a = b;
      b = temp;
      */
-    @IBAction func invertCurrency(_ sender: UIButton) {
+    @IBAction func invertCurrency() {
         var tempImg:UIImage
         var tempCurrency:String
         tempImg = baseImg.image!
@@ -46,8 +47,6 @@ class ViewController: UIViewController, CurrencyDelegate, UITextFieldDelegate {
         targetCurrencyLbl.text = targetCurrency!
         
         textFieldDidBeginEditing(baseTextBox)
-        
-        
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "baseCurrency" {
@@ -68,7 +67,7 @@ class ViewController: UIViewController, CurrencyDelegate, UITextFieldDelegate {
         baseCurrency = countryObj.currency
         if baseCurrency == targetCurrency {
             baseCurrency = tempBaseCurrency
-            invertCurrency(UIButton())
+            invertCurrency()
         } else {
             baseImg.image = UIImage(named: countryObj.flagImage)
             baseCurrencyLbl.text = baseCurrency!
@@ -83,7 +82,7 @@ class ViewController: UIViewController, CurrencyDelegate, UITextFieldDelegate {
         targetCurrency = countryObj.currency
         if baseCurrency == targetCurrency {
             targetCurrency = tempTargetCurrency
-            invertCurrency(UIButton())
+            invertCurrency()
         } else {
             targetImg.image = UIImage(named: countryObj.flagImage)
             targetCurrencyLbl.text = targetCurrency!
@@ -96,10 +95,13 @@ class ViewController: UIViewController, CurrencyDelegate, UITextFieldDelegate {
         CurrencyCalculator().getCurrencyValue (completionHandler: {
             currency in
             DispatchQueue.main.async {
+                
                 if !self.baseTextBox.text!.isEmpty && Double(self.baseTextBox.text!) != nil && !self.baseTextBox.text!.elementsEqual("0"){
                     let textBoxVal = Double(self.baseTextBox.text!)!
+                    print(textBoxVal)
+                    print(currency)
                     self.targetTextBox.text! = String(format: "%g", textBoxVal * Double(currency)!)
-                    print(self.targetTextBox.text!)
+                    
                 }
             }
         },baseCurrency!,targetCurrency!)
@@ -121,11 +123,7 @@ class ViewController: UIViewController, CurrencyDelegate, UITextFieldDelegate {
     
     @IBAction func textFieldDidBeginEditing(_ textField: UITextField) {
         //Text box validations
-        if !textField.text!.isEmpty {
-            if textField.text! == "0" {
-                textField.text = "1"
-            }
-        }
+        
         if !textField.text!.isEmpty && Double(textField.text!) != nil{
             if textField == baseTextBox {
                 convertAndCalculateCurrencyBaseToTarget()
@@ -133,6 +131,29 @@ class ViewController: UIViewController, CurrencyDelegate, UITextFieldDelegate {
                 convertAndCalculateCurrencyTargetToBase()
             }
         }
+    }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        var isBackSpacePressed = false
+        //Check if a backspace is pressed
+        if let char = string.cString(using: String.Encoding.utf8) {
+            let isBackSpace = strcmp(char, "\\b")
+            if (isBackSpace == -92) {
+                isBackSpacePressed = true
+            }
+        }
+        
+        let oldText = textField.text!
+        let stringRange = Range(range, in:oldText)!
+        let newText = oldText.replacingCharacters(in: stringRange, with: string)
+        
+        //If the backspace is not pressed only then check for multiple dots
+        if !isBackSpacePressed && oldText.contains(".") && String(newText.last!) == "." {
+            return false
+        } else if Double(oldText) == nil && Double(newText) == nil {
+            return false
+        }
+        
+        return true
     }
 }
 
