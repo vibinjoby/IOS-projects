@@ -8,6 +8,9 @@
 
 import Foundation
 
+class CountryCodes {
+    var currencies : [String:String]?
+}
 //https://free.currconv.com/api/v7/convert?q=CAD_INR&compact=ultra&apiKey=1ecfd3ec23a4d70e87b6
 class CurrencyCalculator {
     func getCurrencyValue(completionHandler: @escaping (_ completion: String) -> (),_ baseCurrency:String, _ targetCurrency:String) {
@@ -24,6 +27,10 @@ class CurrencyCalculator {
                 }
             }.resume()
         }
+    }
+    //https://currencyapi.net/api/v1/currencies?key=demo
+    func getCountryIsoCodes(completionHandler: @escaping (_ completion: String) -> ()) {
+        
     }
 }
 

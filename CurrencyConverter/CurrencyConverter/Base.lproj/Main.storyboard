@@ -15,65 +15,43 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter the amount" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FFJ-Tq-mtI">
-                                <rect key="frame" x="20" y="148" width="111" height="42"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="111" id="nSd-1G-ukt"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
-                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
-                                <connections>
-                                    <action selector="textFieldDidBeginEditing:" destination="BYZ-38-t0r" eventType="editingChanged" id="8et-mz-Dsg"/>
-                                </connections>
-                            </textField>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ntW-OS-zqc">
-                                <rect key="frame" x="263" y="214" width="62" height="131"/>
+                                <rect key="frame" x="241.5" y="212" width="101.5" height="130.5"/>
                                 <subviews>
                                     <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TEy-GY-epC">
                                         <rect key="frame" x="20" y="81" width="61" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <state key="normal" title=" Change "/>
+                                        <state key="normal" title=" Change ">
+                                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        </state>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                 <integer key="value" value="10"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <segue destination="RMS-mZ-fIb" kind="show" identifier="targetCurrency" id="f1u-jI-Set"/>
+                                        </connections>
                                     </button>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="india" translatesAutoresizingMaskIntoConstraints="NO" id="LuM-c3-Ifh">
-                                        <rect key="frame" x="20" y="20" width="47" height="42"/>
+                                        <rect key="frame" x="27" y="20" width="47" height="42"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="131" id="kSV-P7-Yh8"/>
-                                </constraints>
                             </view>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter the amount" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3qk-mu-3RD">
-                                <rect key="frame" x="244" y="148" width="111" height="42"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="111" id="WVp-c2-52Z"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
-                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
-                                <connections>
-                                    <action selector="textFieldDidBeginEditing:" destination="BYZ-38-t0r" eventType="editingChanged" id="Tt8-zk-0by"/>
-                                </connections>
-                            </textField>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FGN-Bw-4do">
-                                <rect key="frame" x="47" y="214" width="101" height="132"/>
+                                <rect key="frame" x="25" y="212" width="100.5" height="130.5"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="canada" translatesAutoresizingMaskIntoConstraints="NO" id="FJT-Vk-ghU">
-                                        <rect key="frame" x="34" y="20" width="47" height="42"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    </imageView>
                                     <button opaque="NO" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FsG-07-XxR">
                                         <rect key="frame" x="20" y="82" width="61" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <state key="normal" title=" Change "/>
+                                        <state key="normal" title=" Change ">
+                                            <color key="titleColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        </state>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -84,70 +62,138 @@
                                             <segue destination="RMS-mZ-fIb" kind="show" identifier="baseCurrency" id="TCK-64-GNd"/>
                                         </connections>
                                     </button>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="canada" translatesAutoresizingMaskIntoConstraints="NO" id="FJT-Vk-ghU">
+                                        <rect key="frame" x="27" y="20" width="47" height="42"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="56D-Mg-euL">
+                                <rect key="frame" x="0.0" y="128" width="174" height="82"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="CAD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tc3-Iu-jfv">
+                                        <rect key="frame" x="139" y="31" width="45" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter the amount" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FFJ-Tq-mtI">
+                                        <rect key="frame" x="20" y="20" width="111" height="42"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                        <connections>
+                                            <action selector="textFieldDidBeginEditing:" destination="BYZ-38-t0r" eventType="editingChanged" id="8et-mz-Dsg"/>
+                                        </connections>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="101" id="Nud-Ac-2JA"/>
-                                    <constraint firstAttribute="height" constant="132" id="eFC-nP-1L3"/>
+                                    <constraint firstAttribute="height" constant="82" id="FTz-ZU-ask"/>
+                                    <constraint firstAttribute="width" constant="174" id="Of1-Of-2Mo"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ld5-dw-fLb">
+                                <rect key="frame" x="196" y="128" width="179" height="82"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="INR" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jLx-79-2Vd">
+                                        <rect key="frame" x="139" y="31" width="32" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter the amount" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3qk-mu-3RD">
+                                        <rect key="frame" x="20" y="20" width="111" height="42"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="111" id="nW2-It-KDC"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                        <connections>
+                                            <action selector="textFieldDidBeginEditing:" destination="BYZ-38-t0r" eventType="editingChanged" id="Tt8-zk-0by"/>
+                                        </connections>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstItem="3qk-mu-3RD" firstAttribute="centerY" secondItem="jLx-79-2Vd" secondAttribute="centerY" id="FkO-d0-rBq"/>
+                                    <constraint firstItem="3qk-mu-3RD" firstAttribute="centerY" secondItem="Ld5-dw-fLb" secondAttribute="centerY" id="X1u-Ra-iqK"/>
+                                    <constraint firstAttribute="height" constant="82" id="Y0O-Wn-yKV"/>
+                                    <constraint firstItem="jLx-79-2Vd" firstAttribute="leading" secondItem="3qk-mu-3RD" secondAttribute="trailing" constant="8" id="aRl-Tn-ohz"/>
+                                    <constraint firstAttribute="width" constant="179" id="kYy-uW-uP6"/>
+                                    <constraint firstItem="3qk-mu-3RD" firstAttribute="leading" secondItem="Ld5-dw-fLb" secondAttribute="leading" constant="20" id="qwD-7O-85T"/>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fvx-dR-0Jb">
-                                <rect key="frame" x="181" y="257.5" width="53" height="45"/>
+                                <rect key="frame" x="157" y="255" width="61" height="77.5"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="43.5" id="duD-ng-uMi"/>
+                                    <constraint firstAttribute="height" constant="75.670000000000002" id="BzS-bq-1YD"/>
+                                    <constraint firstAttribute="width" constant="61" id="iLw-04-KBv"/>
                                 </constraints>
                                 <state key="normal" backgroundImage="arrow.right.arrow.left" catalog="system"/>
                                 <connections>
                                     <action selector="invertCurrency:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cVE-h4-jst"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nic-LE-ShJ">
+                                <rect key="frame" x="-19.5" y="0.0" width="414" height="134"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="CURRENCY CONVERTER" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KHa-7e-KUn">
+                                        <rect key="frame" x="73" y="96" width="269" height="28"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="23"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="414" id="3fe-r4-aS9"/>
+                                </constraints>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" red="0.92133218050003052" green="0.73255835613050979" blue="0.70292007770401199" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="3qk-mu-3RD" secondAttribute="trailing" constant="20" id="1oI-uZ-bcj"/>
-                            <constraint firstItem="ntW-OS-zqc" firstAttribute="leading" secondItem="FGN-Bw-4do" secondAttribute="trailing" constant="115" id="6iU-iB-ZYC"/>
-                            <constraint firstItem="FFJ-Tq-mtI" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="104" id="6tQ-ej-0vp"/>
-                            <constraint firstItem="Fvx-dR-0Jb" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="214" id="AON-9u-ogY"/>
-                            <constraint firstItem="ntW-OS-zqc" firstAttribute="top" secondItem="3qk-mu-3RD" secondAttribute="bottom" constant="24" id="Bf7-9I-JHV"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ntW-OS-zqc" secondAttribute="trailing" constant="50" id="MRh-GJ-DSc"/>
-                            <constraint firstItem="ntW-OS-zqc" firstAttribute="leading" secondItem="Fvx-dR-0Jb" secondAttribute="trailing" constant="29" id="SjX-0W-T0S"/>
-                            <constraint firstItem="FFJ-Tq-mtI" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="fQF-YH-Opj"/>
-                            <constraint firstItem="Fvx-dR-0Jb" firstAttribute="leading" secondItem="FGN-Bw-4do" secondAttribute="trailing" constant="33" id="hnC-dk-i4T"/>
-                            <constraint firstItem="3qk-mu-3RD" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="104" id="nmm-iS-9KX"/>
-                            <constraint firstItem="FGN-Bw-4do" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="47" id="rLE-aj-xSp"/>
-                            <constraint firstItem="FGN-Bw-4do" firstAttribute="top" secondItem="FFJ-Tq-mtI" secondAttribute="bottom" constant="24" id="vRI-CL-7Q0"/>
+                            <constraint firstItem="ntW-OS-zqc" firstAttribute="top" secondItem="FGN-Bw-4do" secondAttribute="top" id="0nx-6s-FQk"/>
+                            <constraint firstItem="Ld5-dw-fLb" firstAttribute="top" secondItem="nic-LE-ShJ" secondAttribute="bottom" constant="-6" id="1eV-sz-dGp"/>
+                            <constraint firstItem="nic-LE-ShJ" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="2qt-ez-BJd"/>
+                            <constraint firstItem="56D-Mg-euL" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="128" id="5Yb-7J-6oD"/>
+                            <constraint firstItem="Fvx-dR-0Jb" firstAttribute="leading" secondItem="FGN-Bw-4do" secondAttribute="trailing" constant="31.329999999999998" id="5wS-TC-uTS"/>
+                            <constraint firstItem="Fvx-dR-0Jb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="8qh-QH-VIu"/>
+                            <constraint firstItem="FGN-Bw-4do" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="25" id="CBH-lu-0Ta"/>
+                            <constraint firstItem="ntW-OS-zqc" firstAttribute="bottom" secondItem="FGN-Bw-4do" secondAttribute="bottom" id="EsT-df-vdR"/>
+                            <constraint firstItem="nic-LE-ShJ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Iva-Bz-x9T"/>
+                            <constraint firstItem="Fvx-dR-0Jb" firstAttribute="top" secondItem="56D-Mg-euL" secondAttribute="bottom" constant="45.666666666666657" id="SX8-k2-778"/>
+                            <constraint firstItem="56D-Mg-euL" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ToF-lM-O9r"/>
+                            <constraint firstItem="56D-Mg-euL" firstAttribute="top" secondItem="nic-LE-ShJ" secondAttribute="bottom" constant="-6" id="bKz-q7-2gx"/>
+                            <constraint firstItem="ntW-OS-zqc" firstAttribute="leading" secondItem="Fvx-dR-0Jb" secondAttribute="trailing" constant="23.670000000000002" id="fMP-u1-xQY"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Ld5-dw-fLb" secondAttribute="trailing" id="qxy-pc-Nyg"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ntW-OS-zqc" secondAttribute="trailing" constant="32" id="skt-U2-39Y"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="ntW-OS-zqc" secondAttribute="bottom" constant="324.33333333333337" id="uFO-9Q-4ji"/>
+                            <constraint firstItem="ntW-OS-zqc" firstAttribute="top" secondItem="Ld5-dw-fLb" secondAttribute="bottom" constant="2" id="zIz-Gd-1Ci"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="Pju-C0-1zP">
                         <nil key="title"/>
-                        <view key="titleView" contentMode="scaleToFill" id="T5g-G8-SDx">
-                            <rect key="frame" x="187.5" y="22" width="0.0" height="0.0"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="CURRENCY CONVERTER" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LjM-4Z-EjL">
-                                    <rect key="frame" x="-152" y="40" width="304" height="32"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="26"/>
-                                    <nil key="textColor"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                            </subviews>
-                            <color key="backgroundColor" red="0.99870466319999995" green="0.057293384349999997" blue="0.1564284856" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                        </view>
                     </navigationItem>
                     <connections>
+                        <outlet property="baseCurrencyLbl" destination="tc3-Iu-jfv" id="02M-BB-WDb"/>
                         <outlet property="baseImg" destination="FJT-Vk-ghU" id="XbW-hZ-g9d"/>
                         <outlet property="baseTextBox" destination="FFJ-Tq-mtI" id="SDv-l9-HQe"/>
+                        <outlet property="targetCurrencyLbl" destination="jLx-79-2Vd" id="MtL-Tl-Hex"/>
                         <outlet property="targetImg" destination="LuM-c3-Ifh" id="749-Za-lL3"/>
                         <outlet property="targetTextBox" destination="3qk-mu-3RD" id="DwZ-nU-fk6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3776.811594202899" y="93.080357142857139"/>
+            <point key="canvasLocation" x="3775.1999999999998" y="91.625615763546804"/>
         </scene>
-        <!--Currency View Controller-->
+        <!--Choose a Currency-->
         <scene sceneID="Yw1-04-dkc">
             <objects>
                 <tableViewController id="RMS-mZ-fIb" customClass="CurrencyViewController" customModule="CurrencyConverter" customModuleProvider="target" sceneMemberID="viewController">
@@ -156,19 +202,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <color key="sectionIndexBackgroundColor" red="1" green="0.58531421086837954" blue="0.11470305901123279" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                        <navigationBar key="tableHeaderView" contentMode="scaleToFill" id="7G6-bu-V53">
-                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                            <items>
-                                <navigationItem title="Choose a Currency" id="gJ8-Hz-pV0">
-                                    <barButtonItem key="leftBarButtonItem" systemItem="done" id="L7V-Xj-OSm"/>
-                                    <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="d79-Mr-cJp"/>
-                                </navigationItem>
-                            </items>
-                        </navigationBar>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="currencyCell" rowHeight="80" id="k0Q-Tm-aCp">
-                                <rect key="frame" x="0.0" y="72" width="375" height="80"/>
+                                <rect key="frame" x="0.0" y="28" width="375" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="k0Q-Tm-aCp" id="Ap4-2n-zJf">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
@@ -194,7 +230,7 @@
                             <outlet property="delegate" destination="RMS-mZ-fIb" id="Z8S-yU-Xkk"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="W5Q-Cx-YJr"/>
+                    <navigationItem key="navigationItem" title="Choose a Currency" id="Kka-mI-RHc"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="w9r-ac-mgt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -224,4 +260,7 @@
         <image name="canada" width="2000" height="1000"/>
         <image name="india" width="2000" height="1333"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="f1u-jI-Set"/>
+    </inferredMetricsTieBreakers>
 </document>

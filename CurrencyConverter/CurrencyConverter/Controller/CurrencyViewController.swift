@@ -13,16 +13,13 @@ protocol CurrencyDelegate:class {
     func setTargetChangeCurrency(_ countryObj:CountryWiseCurrency)
 }
 
-class CurrencyJson {
-    
-}
-
 class CurrencyViewController: UITableViewController {
     
     weak var delegate:CurrencyDelegate?
     var currencyForCountry = [CountryWiseCurrency]()
+    var isTargetCurrency:Bool?
 
-    override func viewDidLoad() { 
+    override func viewDidLoad() {
         super.viewDidLoad()
         loadCountryArrayObj()
 
@@ -44,7 +41,6 @@ class CurrencyViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of rows
         return currencyForCountry.count
     }
-
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
@@ -54,14 +50,26 @@ class CurrencyViewController: UITableViewController {
         let countryImage = cell.viewWithTag(2) as! UIImageView
         label.text = currencyObj.country
         countryImage.image = UIImage(named: currencyObj.flagImage)
+        
+        if (indexPath.row % 2 == 0)
+        {
+            cell.backgroundColor = colorForIndex(index: indexPath.row)
+        } else {
+            cell.backgroundColor = UIColor.white
+        }
+        
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView.cellForRow(at: indexPath) != nil {
-            // Replace everything inside this `if` condition // with the following
             let countryObj = currencyForCountry[indexPath.row]
-            delegate?.setBaseChangeCurrency(countryObj)
+            if !isTargetCurrency! {
+                delegate?.setBaseChangeCurrency(countryObj)
+            } else {
+                delegate?.setTargetChangeCurrency(countryObj)
+            }
+            
         }
         
     }
@@ -77,6 +85,25 @@ class CurrencyViewController: UITableViewController {
         currencyForCountry.append(CountryWiseCurrency("Chinese Yuan", "CNY", "china"))
         currencyForCountry.append(CountryWiseCurrency("Malaysian Ringgit", "MYR", "malaysia"))
         currencyForCountry.append(CountryWiseCurrency("Singapore Dollar", "SGD", "singapore"))
+    }
+    
+    func colorForIndex(index: Int) -> UIColor
+    {
+        let itemCount = currencyForCountry.count - 1
+        let color = (CGFloat(index) / CGFloat(itemCount)) * 0.6
+        return UIColor(red: 0.80, green: color, blue: 0.0, alpha: 1.0)
+    }
+    
+
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell,
+        forRowAtIndexPath indexPath: NSIndexPath)
+    {
+        if (indexPath.row % 2 == 0)
+        {
+            cell.backgroundColor = colorForIndex(index: indexPath.row)
+        } else {
+            cell.backgroundColor = UIColor.white
+        }
     }
     
 
