@@ -18,17 +18,17 @@ class Questionaire {
         if qnsList == nil {
             //use the hardcoded values
             qnsList = []
-            qnsList!.append(Question("Capital of India","Karnataka","New Delhi","Chennai","kerala",2,0))
-            qnsList!.append(Question("Prime Minister of India","Vajpayee","Narendra modi","Arvind Kejriwal","Amit shah",2,0))
-            qnsList!.append(Question("God's own country","Kerala","Bangalore","Chennai","Tamilnadu",1,0))
+            qnsList!.append(Question("A baby blue whale drinks this many liters of milk per day:","190","50","10","500",1,0))
+            qnsList!.append(Question("What airplane has not been flown commercially since 2003?","McDonnell Douglas MD80","Airbus 380","Boeing 747","Concorde",4,0))
+            qnsList!.append(Question("Who invented the geodesic dome?","Samuel Fuller","Albert Einstein","R. Buckminster Fuller","Samuel Morse",3,0))
             qnsList!.append(Question("Indian cricket team captain","Rohit sharma","MS Dhoni","Virat kohli","Rahane",3,0))
-            qnsList!.append(Question("Ruling party in the centre","AAP","Congress","TMC","BJP",4,0))
+            qnsList!.append(Question("Who invented the World Wide Web?","A laboratory in Switzerland","Microsoft","the Federal Communications Commission","Apple",1,0))
             
-            qnsList!.append(Question("National Bird of India","Crow","Penguin","Peacock","Love birds",3,0))
-            qnsList!.append(Question("Which of the following is a union territory in India","Pondicherry","Chennai","Kerala","Trivandrum",1,0))
-            qnsList!.append(Question("Who on the cricket world cup 2019","India","Australia","New Zealand","England",4,0))
-            qnsList!.append(Question("What is 5 + 5 ?","12","10","13","14",2,0))
-            qnsList!.append(Question("Who is the finance minister of india","Amit shah","Modi","Nirmala sitharaman","Tamilisai",3,0))
+            qnsList!.append(Question("Which of the following technological developments came first?","teletype","telescope","telephone","telegraph",2,0))
+            qnsList!.append(Question("When was the first plastic made of artificial materials patented?","1909","1945","1920","2003",1,0))
+            qnsList!.append(Question("Saturn was named after the Roman god of what?","agriculture","children","fire","commerce",1,0))
+            qnsList!.append(Question("What is the name of the U.S. spacecraft that visited Uranus in 1986?","Helios 1","Voyager 2","Galileo","Magellan",2,0))
+            qnsList!.append(Question("The two most abundant elements in Jupiter’s atmosphere are hydrogen and what?","ammonia","nitrogen","helium","methane",3,0))
             //And save the values to the device
             utils.saveQuestionsObject(qnsList!)
         }

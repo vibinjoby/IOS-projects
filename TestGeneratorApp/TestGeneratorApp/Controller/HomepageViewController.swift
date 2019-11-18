@@ -12,7 +12,16 @@ class HomepageViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupNavigationBar()
         navigationItem.hidesBackButton = true
+    }
+    
+    func setupNavigationBar() {
+        navigationItem.hidesBackButton = true
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.navigationBar.backgroundColor = UIColor.clear
     }
     
 

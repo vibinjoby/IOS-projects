@@ -11,9 +11,6 @@ import SRCountdownTimer
 
 //TO-DO:
 // last question causes issue while clicking on next button
-// submit and next button should be on the same button
-// design last page
-// opening page keep with some logo
 
 
 class ViewController: UIViewController, ScoreDelegate, UITableViewDataSource, UITableViewDelegate, SRCountdownTimerDelegate {
@@ -173,7 +170,6 @@ class ViewController: UIViewController, ScoreDelegate, UITableViewDataSource, UI
     }
     
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        print("now am \(questionNumber)")
         if nextBtn.titleLabel?.text != "Submit"  {
             return false
         }
@@ -189,17 +185,18 @@ class ViewController: UIViewController, ScoreDelegate, UITableViewDataSource, UI
     @objc func onTimerFires() {
         
         timeLeft -= 1
-        if timeLeft <= 0{
+        if timeLeft <= 0 {
             deactivateTimer()
-            nextQuestion()
             loadCountDownTimer()
+            nextQuestion()
         }
         
     }
     func timerDidEnd() {
-        if nextBtn.titleLabel?.text == "Submit"  {
-            
-        }
+       // if countForFinalQn == 6  {
+           // performSegue(withIdentifier: "showScore", sender: nil)
+       // }
+        
     }
     
     func initializeVariables() {
