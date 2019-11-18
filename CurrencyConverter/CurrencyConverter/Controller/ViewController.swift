@@ -2,158 +2,46 @@
 //  ViewController.swift
 //  CurrencyConverter
 //
-//  Created by vibin joby on 2019-11-08.
+//  Created by vibin joby on 2019-11-17.
 //  Copyright © 2019 vibin joby. All rights reserved.
 //
 
 import UIKit
-//TO-DO:
 
-class ViewController: UIViewController, CurrencyDelegate, UITextFieldDelegate {
+class ViewController: UIViewController {
+    @IBOutlet weak var baseLbl: UILabel!
     
-    @IBOutlet weak var targetImg: UIImageView!
-    @IBOutlet weak var baseImg: UIImageView!
-    @IBOutlet weak var baseTextBox: UITextField!
-    @IBOutlet weak var targetTextBox: UITextField!
-    var baseCurrency:String?
-    var targetCurrency:String?
-    @IBOutlet weak var targetCurrencyLbl: UILabel!
-    @IBOutlet weak var baseCurrencyLbl: UILabel!
-    
+    @IBOutlet weak var baseImgView: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        baseTextBox.delegate = self
-        targetTextBox.delegate = self
-        baseCurrency = "CAD"
-        targetCurrency = "INR"
-    }
-    /*
-     temp = a;
-     a = b;
-     b = temp;
-     */
-    @IBAction func invertCurrency() {
-        var tempImg:UIImage
-        var tempCurrency:String
-        tempImg = baseImg.image!
-        baseImg.image! = targetImg.image!
-        targetImg.image! = tempImg
         
-        tempCurrency = baseCurrency!
-        baseCurrency! = targetCurrency!
-        targetCurrency! = tempCurrency
-        
-        baseCurrencyLbl.text = baseCurrency!
-        targetCurrencyLbl.text = targetCurrency!
-        
-        textFieldDidBeginEditing(baseTextBox)
-    }
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "baseCurrency" {
-            let controller = segue.destination as! CurrencyViewController
-            controller.delegate = self
-            controller.isTargetCurrency = false
-            
-        } else if segue.identifier == "targetCurrency" {
-            let controller = segue.destination as! CurrencyViewController
-            controller.delegate = self
-            controller.isTargetCurrency = true
-        }
     }
     
-    func setBaseChangeCurrency(_ countryObj:CountryWiseCurrency){
-        //Incase the base currency and target are same store the old currency in a temp variable before inverting
-        let tempBaseCurrency = baseCurrency
-        baseCurrency = countryObj.currency
-        if baseCurrency == targetCurrency {
-            baseCurrency = tempBaseCurrency
-            invertCurrency()
-        } else {
-            baseImg.image = UIImage(named: countryObj.flagImage)
-            baseCurrencyLbl.text = baseCurrency!
-            //Call the text field begin editing method to update the text field value with the current currency values after changing the fields
-            textFieldDidBeginEditing(baseTextBox)
-        }
-        navigationController?.popViewController(animated: true)
+    @IBAction func onclick() {
+        print("am getting clicked")
     }
-    
-    func setTargetChangeCurrency(_ countryObj:CountryWiseCurrency){
-        let tempTargetCurrency = targetCurrency
-        targetCurrency = countryObj.currency
-        if baseCurrency == targetCurrency {
-            targetCurrency = tempTargetCurrency
-            invertCurrency()
-        } else {
-            targetImg.image = UIImage(named: countryObj.flagImage)
-            targetCurrencyLbl.text = targetCurrency!
-            textFieldDidBeginEditing(targetTextBox)
-        }
-        navigationController?.popViewController(animated: true)
-    }
-    
-    func convertAndCalculateCurrencyBaseToTarget() {
-        CurrencyCalculator().getCurrencyValue (completionHandler: {
-            currency in
-            DispatchQueue.main.async {
-                
-                if !self.baseTextBox.text!.isEmpty && Double(self.baseTextBox.text!) != nil && !self.baseTextBox.text!.elementsEqual("0"){
-                    let textBoxVal = Double(self.baseTextBox.text!)!
-                    print(textBoxVal)
-                    print(currency)
-                    self.targetTextBox.text! = String(format: "%g", textBoxVal * Double(currency)!)
-                    
-                }
-            }
-        },baseCurrency!,targetCurrency!)
-    }
-    
-    func convertAndCalculateCurrencyTargetToBase() {
-        CurrencyCalculator().getCurrencyValue (completionHandler: {
-            currency in
-            DispatchQueue.main.async {
-                if !self.targetTextBox.text!.isEmpty && Double(self.targetTextBox.text!) != nil && !self.targetTextBox.text!.elementsEqual("0") && Double(currency) != nil{
-                    let textBoxVal = Double(self.targetTextBox.text!)!
-                    self.baseTextBox.text! = String(format: "%g", textBoxVal * Double(currency)!)
-                    print(self.targetTextBox.text!)
-                }
-            }
-        },targetCurrency!,baseCurrency!)
-    }
-    
-    
-    @IBAction func textFieldDidBeginEditing(_ textField: UITextField) {
-        //Text box validations
-        
-        if !textField.text!.isEmpty && Double(textField.text!) != nil{
-            if textField == baseTextBox {
-                convertAndCalculateCurrencyBaseToTarget()
-            } else if textField == targetTextBox {
-                convertAndCalculateCurrencyTargetToBase()
-            }
-        }
-    }
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        var isBackSpacePressed = false
-        //Check if a backspace is pressed
-        if let char = string.cString(using: String.Encoding.utf8) {
-            let isBackSpace = strcmp(char, "\\b")
-            if (isBackSpace == -92) {
-                isBackSpacePressed = true
-            }
-        }
-        
-        let oldText = textField.text!
-        let stringRange = Range(range, in:oldText)!
-        let newText = oldText.replacingCharacters(in: stringRange, with: string)
-        
-        //If the backspace is not pressed only then check for multiple dots
-        if !isBackSpacePressed && oldText.contains(".") && String(newText.last!) == "." {
-            return false
-        } else if Double(oldText) == nil && Double(newText) == nil {
-            return false
-        }
-        
-        return true
-    }
-}
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        self.performSegue(withIdentifier: "", sender: nil)
+//        if segue.identifier == "baseCurrency" {
+//            let controller = segue.destination as! CurrencyViewController
+//            controller.delegate = self
+//            controller.isTargetCurrency = false
+//            
+//        } else if segue.identifier == "targetCurrency" {
+//            let controller = segue.destination as! CurrencyViewController
+//            controller.delegate = self
+//            controller.isTargetCurrency = true
+//        }
+//    }
 
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
+    }
+    */
+
+}
